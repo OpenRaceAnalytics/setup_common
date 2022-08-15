@@ -41,11 +41,13 @@ if ! grep -q "# tools_install_gui.sh done." $INSTALL_LOG; then
     if ! grep -q "# Touchscreen config" /boot/config.txt; then
       echo '# Touchscreen config' | sudo tee -a /boot/config.txt
       echo 'lcd_rotate=2' | sudo tee -a /boot/config.txt
+      echo 'disable_splash=1' | sudo tee -a /boot/config.txt
       sudo sed -i 's/dtoverlay=vc4-kms-v3d/#dtoverlay=vc4-kms-v3d/' /boot/config.txt
       sudo cp -f setup_common/files/splash/splash_480.png /usr/share/plymouth/themes/pix/splash.png
       echo 'xserver-command = X -nocursor' | sudo tee -a /etc/lightdm/lightdm.conf
-      sudo sed -i -e 's/$/ logo.nologo vt.global_cursor_default=0 fastboot noswap/' /boot/cmdline.txt
+      sudo sed -i -e 's/$/ logo.nologo consoleblank=0 loglevel=1 quiet vt.global_cursor_default=0 fastboot noswap/' /boot/cmdline.txt
     fi
 
     echo '# tools_install_gui.sh done.' | sudo tee -a $INSTALL_LOG
 fi
+
